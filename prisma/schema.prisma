@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum untuk role pengguna agar lebih terstruktur
+enum Role {
+  MAHASISWA
+  DOSEN
+  KAPRODI
+  KETUA_KELAS
+  ADMIN
+}
+
+// Enum untuk jenis peminjaman
+enum JenisPeminjaman {
+  JAM_PENGGANTI
+  LAINNYA
+}
+
+// Enum untuk status peminjaman dan persetujuan
+enum StatusPersetujuan {
+  PENDING
+  DISETUJUI
+  DITOLAK
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  nomor_induk  String   @unique
+  nama_lengkap String
+  password     String
+  role         Role[] // <-- THE FIX IS HERE
+  jurusanId    Int?     // Nullable karena ADMIN tidak punya jurusan
+  jurusan      Jurusan? @relation(fields: [jurusanId], references: [id])
+
+  // Relasi
+  peminjaman          Peminjaman[]
+  persetujuanDiberikan Persetujuan[]
+
+  @@map("users")
+}
+
+model Jurusan {
+  id          Int    @id @default(autoincrement())
+  nama_jurusan String @unique
+
+  // Relasi
+  users       User[]
+  jadwalKuliah JadwalKuliah[]
+
+  @@map("jurusan")
+}
+
+model Ruangan {
+  id           Int    @id @default(autoincrement())
+  kode_ruangan String @unique
+  nama_ruangan String @unique
+  jenis_ruangan String // 'Kelas' atau 'Lab'
+
+  // Relasi
+  jadwalKuliah JadwalKuliah[]
+  peminjaman   Peminjaman[]
+
+  @@map("ruangan")
+}
+
+model JadwalKuliah {
+  id             Int      @id @default(autoincrement())
+  kode_matkul    String
+  hari           String
+  nama_matkul    String
+  dosen_pengampu String
+  sks            Int
+  mulai          String
+  selesai        String
+  
+  ruanganId      Int
+  ruangan        Ruangan @relation(fields: [ruanganId], references: [id])
+
+  jurusanId      Int
+  jurusan        Jurusan @relation(fields: [jurusanId], references: [id])
+
+  @@map("jadwal_kuliah")
+}
+
+model Peminjaman {
+  id                Int               @id @default(autoincrement())
+  tujuan            String
+  jenisPeminjaman   JenisPeminjaman
+  waktuMulai        DateTime
+  waktuSelesai      DateTime
+  statusPeminjaman  StatusPersetujuan @default(PENDING)
+  createdAt         DateTime          @default(now())
+
+  peminjamId        Int
+  peminjam          User    @relation(fields: [peminjamId], references: [id])
+  
+  ruanganId         Int
+  ruangan           Ruangan @relation(fields: [ruanganId], references: [id])
+  
+  // Informasi tambahan jika jenisnya JAM_PENGGANTI
+  matkulPengganti   String?
+  dosenPengampu     String? // Nama dosen dari mata kuliah yang diganti
+
+  // Relasi
+  persetujuan       Persetujuan[]
+
+  @@map("peminjaman")
+}
+
+model Persetujuan {
+  id                      Int               @id @default(autoincrement())
+  status                  StatusPersetujuan @default(PENDING)
+  komentar                String?
+  updatedAt               DateTime          @updatedAt
+  
+  peminjamanId            Int
+  peminjaman              Peminjaman @relation(fields: [peminjamanId], references: [id])
+  
+  pemberiPersetujuanId    Int
+  pemberiPersetujuan      User    @relation(fields: [pemberiPersetujuanId], references: [id])
+  
+  rolePemberiPersetujuan  Role // Menyimpan role saat memberikan persetujuan
+
+  @@map("persetujuan")
+}

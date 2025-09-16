@@ -1,0 +1,10 @@
+# Folder data CSV
+data/
+
+# Folder dependensi Node.js
+node_modules
+
+# File environment (berisi informasi sensitif seperti password database)
+.env
+
+/generated/prisma
