@@ -37,7 +37,8 @@ model User {
   nomor_induk  String   @unique
   nama_lengkap String
   password     String
-  role         Role[] // <-- THE FIX IS HERE
+  role         Role[]
+  angkatan     Int? // <-- TAMBAHKAN KOLOM ANGKATAN
   jurusanId    Int?     // Nullable karena ADMIN tidak punya jurusan
   jurusan      Jurusan? @relation(fields: [jurusanId], references: [id])
 
@@ -81,7 +82,7 @@ model JadwalKuliah {
   sks            Int
   mulai          String
   selesai        String
-  
+ 
   ruanganId      Int
   ruangan        Ruangan @relation(fields: [ruanganId], references: [id])
 

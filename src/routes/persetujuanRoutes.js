@@ -1,7 +1,7 @@
 // src/routes/persetujuanRoutes.js
-const express = require('express');
-const { getPendingPersetujuan, updatePersetujuan } = require('../controllers/persetujuanController');
-const { protect } = require('../middleware/authMiddleware');
+const express = require("express");
+const { getPendingPersetujuan, updatePersetujuan } = require("../controllers/persetujuanController");
+const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Semua rute di file ini dilindungi
@@ -58,7 +58,7 @@ router.use(protect);
  *               $ref: '#/components/schemas/Error'
  */
 // GET /api/persetujuan/pending -> Lihat permintaan persetujuan
-router.get('/persetujuan/pending', getPendingPersetujuan);
+router.get("/pending", getPendingPersetujuan);
 
 /**
  * @swagger
@@ -131,7 +131,6 @@ router.get('/persetujuan/pending', getPendingPersetujuan);
  *               $ref: '#/components/schemas/Error'
  */
 // PUT /api/persetujuan/:id -> Update status persetujuan
-router.put('/persetujuan/:id', updatePersetujuan);
-
+router.put("/:id", updatePersetujuan);
 
 module.exports = router;
