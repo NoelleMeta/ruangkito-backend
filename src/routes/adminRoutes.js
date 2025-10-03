@@ -17,8 +17,14 @@ const {
   createJadwal,
   updateJadwal,
   deleteJadwal,
+  importJadwalFromCsv,
+  importJadwalUpload,
+  bulkUpsertJadwal,
+  getGroupedMataKuliah,
 } = require("../controllers/adminController");
 const { protect, authorizeRoles, Role } = require("../middleware/authMiddleware");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
@@ -199,5 +205,17 @@ router.get("/admin/jadwal", protect, authorizeRoles(Role.ADMIN), listJadwal);
 router.post("/admin/jadwal", protect, authorizeRoles(Role.ADMIN), createJadwal);
 router.put("/admin/jadwal/:id", protect, authorizeRoles(Role.ADMIN), updateJadwal);
 router.delete("/admin/jadwal/:id", protect, authorizeRoles(Role.ADMIN), deleteJadwal);
+
+// New: import jadwal from CSV (expects body: { filePath, replace })
+router.post("/admin/jadwal/import", protect, authorizeRoles(Role.ADMIN), importJadwalFromCsv);
+
+// New: upload CSV file (multipart) -> import
+router.post("/admin/jadwal/upload", protect, authorizeRoles(Role.ADMIN), upload.single("file"), importJadwalUpload);
+
+// New: bulk upsert jadwal via JSON array
+router.post("/admin/jadwal/bulk", protect, authorizeRoles(Role.ADMIN), bulkUpsertJadwal);
+
+// New: grouped mata kuliah by group query
+router.get("/admin/jadwal/grouped", protect, authorizeRoles(Role.ADMIN), getGroupedMataKuliah);
 
 module.exports = router;

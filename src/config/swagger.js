@@ -1,255 +1,268 @@
-const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Peminjaman Ruangan API',
-      version: '1.0.0',
-      description: 'API untuk sistem peminjaman ruangan kampus',
+      title: "Peminjaman Ruangan API",
+      version: "1.0.0",
+      description: "API untuk sistem peminjaman ruangan kampus",
       contact: {
-        name: 'API Support',
-        email: 'support@peminjaman.com'
-      }
+        name: "API Support",
+        email: "support@peminjaman.com",
+      },
     },
     servers: [
       {
-        url: 'http://localhost:5000',
-        description: 'Development server'
-      }
+        url: "http://localhost:5000",
+        description: "Development server",
+      },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT'
-        }
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
       },
       schemas: {
         User: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik pengguna'
+              type: "integer",
+              description: "ID unik pengguna",
             },
             nomor_induk: {
-              type: 'string',
-              description: 'Nomor induk pengguna'
+              type: "string",
+              description: "Nomor induk pengguna",
             },
             nama_lengkap: {
-              type: 'string',
-              description: 'Nama lengkap pengguna'
+              type: "string",
+              description: "Nama lengkap pengguna",
             },
             role: {
-              type: 'array',
-              enum: ['MAHASISWA', 'DOSEN', 'KAPRODI', 'KETUA_KELAS', 'ADMIN'],
-              description: 'Role pengguna'
+              type: "array",
+              enum: ["MAHASISWA", "DOSEN", "KAPRODI", "KETUA_KELAS", "ADMIN"],
+              description: "Role pengguna",
             },
             jurusanId: {
-              type: 'integer',
+              type: "integer",
               nullable: true,
-              description: 'ID jurusan (null untuk admin)'
-            }
-          }
+              description: "ID jurusan (null untuk admin)",
+            },
+          },
         },
         Jurusan: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik jurusan'
+              type: "integer",
+              description: "ID unik jurusan",
             },
             nama_jurusan: {
-              type: 'string',
-              description: 'Nama jurusan'
-            }
-          }
+              type: "string",
+              description: "Nama jurusan",
+            },
+          },
         },
         Ruangan: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik ruangan'
+              type: "integer",
+              description: "ID unik ruangan",
             },
             kode_ruangan: {
-              type: 'string',
-              description: 'Kode ruangan'
+              type: "string",
+              description: "Kode ruangan",
             },
             nama_ruangan: {
-              type: 'string',
-              description: 'Nama ruangan'
+              type: "string",
+              description: "Nama ruangan",
             },
             jenis_ruangan: {
-              type: 'string',
-              description: 'Jenis ruangan (Kelas atau Lab)'
-            }
-          }
+              type: "string",
+              description: "Jenis ruangan (Kelas atau Lab)",
+            },
+          },
         },
         JadwalKuliah: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik jadwal'
+              type: "integer",
+              description: "ID unik jadwal",
             },
             kode_matkul: {
-              type: 'string',
-              description: 'Kode mata kuliah'
+              type: "string",
+              description: "Kode mata kuliah",
             },
             hari: {
-              type: 'string',
-              description: 'Hari kuliah'
+              type: "string",
+              description: "Hari kuliah",
             },
             nama_matkul: {
-              type: 'string',
-              description: 'Nama mata kuliah'
+              type: "string",
+              description: "Nama mata kuliah",
             },
             dosen_pengampu: {
-              type: 'string',
-              description: 'Nama dosen pengampu'
+              type: "string",
+              description: "Nama dosen pengampu",
             },
             sks: {
-              type: 'integer',
-              description: 'Jumlah SKS'
+              type: "integer",
+              description: "Jumlah SKS",
             },
             mulai: {
-              type: 'string',
-              description: 'Jam mulai kuliah'
+              type: "string",
+              description: "Jam mulai kuliah",
             },
             selesai: {
-              type: 'string',
-              description: 'Jam selesai kuliah'
+              type: "string",
+              description: "Jam selesai kuliah",
             },
             ruanganId: {
-              type: 'integer',
-              description: 'ID ruangan'
+              type: "integer",
+              description: "ID ruangan",
             },
             jurusanId: {
-              type: 'integer',
-              description: 'ID jurusan'
-            }
-          }
+              type: "integer",
+              description: "ID jurusan",
+            },
+          },
         },
         Peminjaman: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik peminjaman'
+              type: "integer",
+              description: "ID unik peminjaman",
             },
             peminjamId: {
-              type: 'integer',
-              description: 'ID pengguna yang meminjam'
+              type: "integer",
+              description: "ID pengguna yang meminjam",
             },
             ruanganId: {
-              type: 'integer',
-              description: 'ID ruangan yang dipinjam'
+              type: "integer",
+              description: "ID ruangan yang dipinjam",
             },
             tujuan: {
-              type: 'string',
-              description: 'Tujuan peminjaman'
+              type: "string",
+              description: "Tujuan peminjaman",
             },
             jenisPeminjaman: {
-              type: 'string',
-              enum: ['JAM_PENGGANTI', 'LAINNYA'],
-              description: 'Jenis peminjaman'
+              type: "string",
+              enum: ["JAM_PENGGANTI", "LAINNYA"],
+              description: "Jenis peminjaman",
             },
             waktuMulai: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Waktu mulai peminjaman'
+              type: "string",
+              format: "date-time",
+              description: "Waktu mulai peminjaman",
             },
             waktuSelesai: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Waktu selesai peminjaman'
+              type: "string",
+              format: "date-time",
+              description: "Waktu selesai peminjaman",
             },
             statusPeminjaman: {
-              type: 'string',
-              enum: ['PENDING', 'DISETUJUI', 'DITOLAK'],
-              description: 'Status persetujuan peminjaman'
+              type: "string",
+              enum: ["PENDING", "DISETUJUI", "DITOLAK"],
+              description: "Status persetujuan peminjaman",
             },
             matkulPengganti: {
-              type: 'string',
+              type: "string",
               nullable: true,
-              description: 'Mata kuliah pengganti (untuk JAM_PENGGANTI)'
+              description: "Mata kuliah pengganti (untuk JAM_PENGGANTI)",
             },
             dosenPengampu: {
-              type: 'string',
+              type: "string",
               nullable: true,
-              description: 'Nama dosen pengampu (untuk JAM_PENGGANTI)'
+              description: "Nama dosen pengampu (untuk JAM_PENGGANTI)",
             },
             createdAt: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Tanggal dibuat'
-            }
-          }
+              type: "string",
+              format: "date-time",
+              description: "Tanggal dibuat",
+            },
+          },
         },
         Persetujuan: {
-          type: 'object',
+          type: "object",
           properties: {
             id: {
-              type: 'integer',
-              description: 'ID unik persetujuan'
+              type: "integer",
+              description: "ID unik persetujuan",
             },
             peminjamanId: {
-              type: 'integer',
-              description: 'ID peminjaman'
+              type: "integer",
+              description: "ID peminjaman",
             },
             pemberiPersetujuanId: {
-              type: 'integer',
-              description: 'ID pemberi persetujuan'
+              type: "integer",
+              description: "ID pemberi persetujuan",
             },
             rolePemberiPersetujuan: {
-              type: 'string',
-              enum: ['MAHASISWA', 'DOSEN', 'KAPRODI', 'KETUA_KELAS', 'ADMIN'],
-              description: 'Role pemberi persetujuan'
+              type: "string",
+              enum: ["MAHASISWA", "DOSEN", "KAPRODI", "KETUA_KELAS", "ADMIN"],
+              description: "Role pemberi persetujuan",
             },
             status: {
-              type: 'string',
-              enum: ['PENDING', 'DISETUJUI', 'DITOLAK'],
-              description: 'Status persetujuan'
+              type: "string",
+              enum: ["PENDING", "DISETUJUI", "DITOLAK"],
+              description: "Status persetujuan",
             },
             komentar: {
-              type: 'string',
+              type: "string",
               nullable: true,
-              description: 'Komentar persetujuan'
+              description: "Komentar persetujuan",
             },
             updatedAt: {
-              type: 'string',
-              format: 'date-time',
-              description: 'Tanggal diupdate'
-            }
-          }
+              type: "string",
+              format: "date-time",
+              description: "Tanggal diupdate",
+            },
+          },
         },
         Error: {
-          type: 'object',
+          type: "object",
           properties: {
             message: {
-              type: 'string',
-              description: 'Pesan error'
+              type: "string",
+              description: "Pesan error",
             },
             error: {
-              type: 'string',
-              description: 'Detail error'
-            }
-          }
-        }
-      }
+              type: "string",
+              description: "Detail error",
+            },
+          },
+        },
+      },
     },
     security: [
       {
-        bearerAuth: []
-      }
-    ]
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/routes/*.js', './src/controllers/*.js'] // Path to the API files
+  apis: ["./src/routes/*.js", "./src/controllers/*.js"], // Path to the API files
 };
 
-const specs = swaggerJsdoc(options);
-
-module.exports = specs;
+// By default we skip generating Swagger specs to avoid blocking server startup
+// when JSDoc comments contain malformed YAML. Set ENABLE_SWAGGER=true in the
+// environment to enable generation (useful for dev when docs are verified).
+if (process.env.ENABLE_SWAGGER !== 'true') {
+  module.exports = {};
+} else {
+  let specs = {};
+  try {
+    specs = swaggerJsdoc(options);
+  } catch (err) {
+    console.warn("Warning: swagger-jsdoc failed to generate specs. API docs will be disabled.");
+    console.warn(err && err.message ? err.message : err);
+    specs = {};
+  }
+  module.exports = specs;
+}

@@ -11,7 +11,7 @@ const ruanganRoutes = require("./routes/ruanganRoutes");
 const peminjamanRoutes = require("./routes/peminjamanRoutes");
 const persetujuanRoutes = require("./routes/persetujuanRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const jadwalKuliahRoutes = require("./routes/jadwalKuliahRoutes"); // <-- TAMBAHKAN
+const jadwalKuliahRoutes = require("./routes/jadwalKuliahRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,12 +25,11 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Content-Length", "X-Requested-With", "Access-Control-Allow-Origin"],
     preflightContinue: false,
-    optionsSuccessStatus: 204
+    optionsSuccessStatus: 204,
   })
 );
-// Handle preflight requests dan log semua request untuk debugging
+// Handle preflight requests
 app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path} - Headers:`, req.headers);
   if (req.method === "OPTIONS") {
     res.sendStatus(204);
   } else {
@@ -39,7 +38,7 @@ app.use((req, res, next) => {
 });
 app.use(express.json());
 
-// Swagger Documentation
+// Swagger Documentation (temporarily disabled to avoid YAML parsing issues)
 app.use(
   "/api-docs",
   swaggerUi.serve,
@@ -60,8 +59,8 @@ app.use("/api", ruanganRoutes);
 app.use("/api/peminjaman", peminjamanRoutes); // Perubahan di sini
 app.use("/api/persetujuan", persetujuanRoutes);
 app.use("/api", adminRoutes);
-app.use("/api", jadwalKuliahRoutes); // <-- TAMBAHKAN
+app.use("/api", jadwalKuliahRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  // Server started
 });

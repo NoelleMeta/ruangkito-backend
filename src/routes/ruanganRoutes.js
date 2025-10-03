@@ -1,6 +1,6 @@
 // src/routes/ruanganRoutes.js
-const express = require('express');
-const { getAvailableRooms } = require('../controllers/ruanganController');
+const express = require("express");
+const { getAvailableRooms, getDailyAvailability } = require("../controllers/ruanganController");
 const router = express.Router();
 
 /**
@@ -57,6 +57,7 @@ const router = express.Router();
  *               $ref: '#/components/schemas/Error'
  */
 // contoh: GET /api/ruangan/available?hari=senin&jam_mulai=10:00&jam_selesai=12:00
-router.get('/ruangan/available', getAvailableRooms);
+router.get("/ruangan/available", getAvailableRooms);
+router.get("/ruangan/availability", getDailyAvailability);
 
 module.exports = router;

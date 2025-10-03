@@ -50,15 +50,8 @@ const authorizeRoles = (...allowedRoles) => {
     // Pastikan req.user.role adalah array
     const userRoles = Array.isArray(req.user.role) ? req.user.role : [req.user.role];
 
-    // Log untuk debugging dengan lebih detail
-    console.log("Authorizing access to route:", req.originalUrl);
-    console.log("User data:", req.user);
-    console.log("User roles:", userRoles);
-    console.log("Allowed roles for this route:", allowedRoles);
-
     // Jika allowedRoles kosong, izinkan semua role
     if (allowedRoles.length === 0) {
-      console.log("No roles specified, allowing access");
       return next();
     }
 
@@ -66,12 +59,9 @@ const authorizeRoles = (...allowedRoles) => {
     const hasRole = userRoles.some((userRole) => {
       return allowedRoles.some((allowedRole) => {
         const match = String(userRole).toUpperCase() === String(allowedRole).toUpperCase();
-        console.log(`Comparing ${userRole} with ${allowedRole}: ${match ? "MATCH" : "NO MATCH"}`);
         return match;
       });
     });
-
-    console.log("Access decision:", hasRole ? "GRANTED" : "DENIED");
 
     if (!hasRole) {
       return res.status(403).json({ message: "Akses ditolak: role tidak memiliki izin" });
